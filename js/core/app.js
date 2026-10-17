@@ -53,7 +53,8 @@
 
   /* ---------- 底部导航（自动生成） ---------- */
   function buildNav() {
-    const groups = Router.allGroups();
+    // ★ 只显示「有可见页面」的分组，避免点进去是空页
+    const groups = Router.allGroups().filter(g => Router.groupTabs(g.id).length > 0);
     mount(els.nav, groups.map(g =>
       h('a', {
         dataset: { group: g.id },
@@ -250,7 +251,9 @@
   function renderNotFound(msg) {
     state.current = null;
     els.tabs.textContent = '';
+    els.hdrSub.textContent = '';
     setNavActive(null);
+    // ★ 必须提供返回入口，否则用户会卡死在错误页
     mount(els.view, UI.error(msg || '页面不存在', () => Router.navigate(null)));
   }
 

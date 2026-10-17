@@ -18,13 +18,13 @@
 
   /* ---------- 一级分组 = 底部导航 ---------- */
   Router.registerGroup({ id: 'wiki', title: '资料', icon: '📖', order: 10,
-    sub: '怪物 · 物品 · 组合书 · 地图 · 攻略' });
-
-  Router.registerGroup({ id: 'save', title: '存档', icon: '🎒', order: 20,
-    sub: '仓库 · 背包 · 角色 · 进度' });
-
+    sub: '怪物 · 物品 · 地图 · 攻略' });
+  // ⚠️ 存档分组暂不启用：目前还没有存档编辑页，注册了会让底栏出现空入口。
+  //    等 web 存档编辑器做出来后，取消下面这行注释并注册页面即可。
+  // Router.registerGroup({ id: 'save', title: '存档', icon: '🎒', order: 20,
+  //   sub: '仓库 · 背包 · 角色 · 进度' });
   Router.registerGroup({ id: 'tool', title: '工具', icon: '🧰', order: 30,
-    sub: '伤害计算 · 掉落模拟 · HEX' });
+    sub: '伤害计算 · 掉落模拟' });
 
   /* ---------- 资料页 ---------- */
   Router.registerPage({
