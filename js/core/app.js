@@ -30,10 +30,16 @@
       hdrEm: $('#hdrEm'),
       hdrTitle: $('#hdrTitle'),
       hdrSub: $('#hdrSub'),
+      hdrHome: $('#hdrHome'),
       tabs: $('#tabs'),
       view: $('#view'),
       nav: $('#nav'),
     };
+
+    // ★ 点顶栏标题回首页
+    if (els.hdrHome) {
+      els.hdrHome.addEventListener('click', () => Router.navigate(null));
+    }
 
     buildNav();
     Router.onRoute(handleRoute);
@@ -91,7 +97,7 @@
       state.group = null; state.page = null; state.params = [];
       els.hdrEm.textContent = '⚔️';
       els.hdrTitle.textContent = '英雄史诗初章';
-      els.hdrSub.textContent = '资料库 · 存档编辑 · 工具';
+      els.hdrSub.textContent = '资料库 · 存档 · 工具';
       els.tabs.textContent = '';
       setNavActive(null);
       return renderHome();
