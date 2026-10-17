@@ -24,9 +24,12 @@
  *   public static final int[] c = new int[]{0xFFFFFF, 0xFFFF00, 16722152, 65280};
  *
  * 0xFFFFFF = 白 / 0xFFFF00 = 黄 / 16722152 = 0xFF2A68 粉 / 65280 = 0x00FF00 绿
+ *
+ * 档位名称（游戏内只显示颜色，文字标签为本站所加）：
+ *   0 一般（白） / 1 稀有（黄） / 2 史诗（粉） / 3 套装（绿）
  * ============================================================ */
 const QUALITY_COLORS = ['#FFFFFF', '#FFFF00', '#FF2A68', '#00FF00'];
-const QUALITY_NAMES = ['普通', '优良', '稀有', '传说'];
+const QUALITY_NAMES = ['一般', '稀有', '史诗', '套装'];
 
 function qColor(it) {
   const q = (it && typeof it.quality === 'number') ? it.quality : 0;
