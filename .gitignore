@@ -1,0 +1,16 @@
+# 忽略 AI 工具备份目录（含对话记录，不应公开）
+.backup/
+
+# 旧版站点（已被 v2 取代）
+_old/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+
+# 编辑器
+.vscode/
+.idea/
+*.swp

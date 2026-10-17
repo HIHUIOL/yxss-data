@@ -1,0 +1,30 @@
+{
+ "version": "1e50b3ae",
+ "datasets": {
+  "items": {
+   "file": "items.json",
+   "count": 591,
+   "size": 132180
+  },
+  "monsters": {
+   "file": "monsters.json",
+   "count": 132,
+   "size": 676808
+  },
+  "maps": {
+   "file": "maps.json",
+   "count": 72,
+   "size": 7600
+  },
+  "icons": {
+   "file": "icons.json",
+   "count": 591,
+   "size": 36176
+  },
+  "sprites": {
+   "file": "sprites.json",
+   "count": 132,
+   "size": 308162
+  }
+ }
+}

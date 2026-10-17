@@ -1,0 +1,469 @@
+/* ============================================================
+ * style.css —— 英雄史诗初章 资料库
+ *
+ * 结构：
+ *   1. 设计令牌（改主题只改这里）
+ *   2. 基础重置
+ *   3. 布局骨架（顶栏 / 视图 / 底部导航）
+ *   4. 组件（卡片 / 列表 / 徽标 / 分段 / 搜索 …）
+ *   5. 页面专用
+ *   6. 工具类
+ *
+ * 主题切换：给 <html> 加 data-theme="light" 即可（见文末）
+ * ============================================================ */
+
+/* ========== 1. 设计令牌 ========== */
+:root {
+  /* 底色 */
+  --bg:      #0a0c10;
+  --bg2:     #0e1117;
+  --card:    #141821;
+  --card2:   #1b2029;
+  --line:    #252c3a;
+  --line2:   #323a4d;
+
+  /* 文字 */
+  --fg:      #e9edf5;
+  --muted:   #8d96aa;
+  --sub:     #5b6379;
+
+  /* 主色 */
+  --blu:     #4f8cff;
+  --blu2:    #3a6fd8;
+  --gold:    #d9a441;
+  --gold2:   #f0c060;
+  --gold-dim:rgba(217,164,65,.14);
+  --grn:     #3ecf8e;
+  --org:     #f0a23c;
+  --red:     #ff5468;
+  --purple:  #a679ff;
+
+  /* 尺寸 */
+  --nav:     62px;
+  --r:       14px;
+  --gap:     11px;
+  --pad:     13px;
+
+  /* 字体 */
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC", sans-serif;
+
+  /* 安全区 */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+/* ========== 2. 基础重置 ========== */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.5 var(--sans);
+  overscroll-behavior-y: contain;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+
+/* ========== 3. 布局骨架 ========== */
+.hdr {
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(10,12,16,.92);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+  padding: calc(var(--sat) + 9px) var(--pad) 0;
+}
+.hdr .ttl {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 700; letter-spacing: .2px;
+}
+.hdr .ttl .em { font-size: 19px; }
+.hdr .ttl .ver {
+  margin-left: auto; font-size: 9.5px; font-weight: 400;
+  color: var(--sub); font-family: var(--mono);
+}
+.hdr .sub { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+
+/* 二级页签 */
+.tabs {
+  display: flex; overflow-x: auto; margin-top: 9px;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs .t {
+  flex: 0 0 auto; position: relative; cursor: pointer; white-space: nowrap;
+  padding: 9px 15px 11px; font-size: 13.5px; color: var(--muted);
+  transition: color .15s;
+}
+.tabs .t.on { color: var(--gold2); font-weight: 600; }
+.tabs .t.on::after {
+  content: ''; position: absolute; left: 15px; right: 15px; bottom: 0; height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+}
+
+/* 视图容器 */
+#view {
+  padding: var(--pad) var(--pad) calc(var(--nav) + var(--sab) + 22px);
+  min-height: 60vh;
+}
+
+/* 底部导航 */
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: flex;
+  background: rgba(14,17,23,.94);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border-top: 1px solid var(--line);
+  padding-bottom: var(--sab);
+}
+.nav a {
+  flex: 1; position: relative; height: var(--nav);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; font-size: 10px; text-decoration: none;
+  color: var(--sub); cursor: pointer; transition: color .15s;
+}
+.nav a .ni { font-size: 20px; line-height: 1; transition: transform .15s; }
+.nav a.on { color: var(--gold2); }
+.nav a.on .ni { transform: translateY(-1px); }
+.nav a.on::before {
+  content: ''; position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%); width: 22px; height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+}
+
+/* ========== 4. 组件 ========== */
+
+/* --- 卡片 --- */
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r); margin-bottom: var(--gap); overflow: hidden;
+}
+.card > .ch {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 11px var(--pad) 9px;
+  font-size: 12.5px; font-weight: 600; color: var(--gold2); letter-spacing: .2px;
+}
+.card > .cb { padding: 0 var(--pad) 12px; }
+.card > .cb.p0 { padding: 0; }
+
+/* --- 徽标 --- */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+  font-size: 11px; font-family: var(--mono);
+  background: var(--card2); border: 1px solid var(--line2); color: var(--muted);
+}
+.chip.gold { border-color: rgba(217,164,65,.5);  color: var(--gold2); background: var(--gold-dim); }
+.chip.blu  { border-color: rgba(79,140,255,.45); color: #9dc0ff; background: rgba(79,140,255,.1); }
+.chip.grn  { border-color: rgba(62,207,142,.45); color: #7ee8b8; background: rgba(62,207,142,.1); }
+.chip.red  { border-color: rgba(255,84,104,.45); color: #ff8f9c; background: rgba(255,84,104,.1); }
+
+/* --- 列表行 --- */
+.row {
+  display: flex; align-items: center; gap: 11px;
+  min-height: 56px; padding: 11px var(--pad);
+  border-bottom: 1px solid var(--line);
+  transition: background .12s;
+}
+.row:last-child { border-bottom: none; }
+.row.tap { cursor: pointer; }
+.row.tap:active { background: var(--card2); }
+.row .ri {
+  flex: 0 0 36px; width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 17px;
+  background: var(--bg2); border: 1px solid var(--line2);
+}
+.row .rm { flex: 1; min-width: 0; }
+.row .rn {
+  font-size: 14px; font-weight: 550;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.row .rd {
+  margin-top: 2px; font-size: 11.5px; color: var(--sub); font-family: var(--mono);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.row .rr { flex: 0 0 auto; font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
+.row .chev { flex: 0 0 auto; font-size: 15px; color: var(--sub); opacity: .6; }
+
+/* --- 搜索框 --- */
+.search {
+  display: flex; align-items: center; gap: 9px;
+  height: 44px; padding: 0 var(--pad); margin-bottom: var(--gap);
+  background: var(--card); border: 1px solid var(--line2); border-radius: 12px;
+}
+.search .si { font-size: 15px; color: var(--sub); }
+.search input {
+  flex: 1; min-width: 0;
+  background: none; border: none; outline: none;
+  font-size: 14.5px;
+}
+.search input::placeholder { color: var(--sub); }
+
+/* --- 分段选择器 --- */
+.seg {
+  display: flex; padding: 3px; margin-bottom: 12px;
+  background: var(--bg2); border: 1px solid var(--line2); border-radius: 11px;
+}
+.seg .s {
+  flex: 1; padding: 8px 4px; border-radius: 8px;
+  text-align: center; font-size: 12.5px; line-height: 1.25;
+  color: var(--muted); cursor: pointer; transition: .15s;
+}
+.seg .s .sl { display: block; margin-top: 1px; font-size: 10px; font-family: var(--mono); color: var(--sub); }
+.seg .s.on {
+  background: var(--card2); color: var(--gold2); font-weight: 600;
+  box-shadow: 0 1px 5px rgba(0,0,0,.4);
+}
+.seg .s.on .sl { color: var(--gold); }
+
+/* --- 状态占位 --- */
+.empty {
+  padding: 34px 20px; text-align: center;
+  font-size: 13px; color: var(--muted); line-height: 1.7;
+}
+.empty .em { font-size: 30px; display: block; margin-bottom: 10px; opacity: .85; }
+.empty .spin { animation: spin 1.6s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- 键值 --- */
+.kv {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 0; font-size: 14px; border-bottom: 1px solid var(--line);
+}
+.kv:last-child { border-bottom: none; }
+.kv > span { color: var(--muted); }
+.kv > b { color: var(--fg); font-family: var(--mono); }
+
+/* --- 统计格 --- */
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.stat { padding: 9px 11px; background: var(--bg2); border: 1px solid var(--line); border-radius: 11px; }
+.stat .sk { font-size: 10.5px; color: var(--sub); letter-spacing: .4px; }
+.stat .sv { margin-top: 2px; font-size: 16px; font-weight: 700; font-family: var(--mono); }
+.sv.gold { color: var(--gold2); }
+.sv.grn  { color: var(--grn); }
+.sv.blu  { color: #9dc0ff; }
+.sv.purple { color: #c4a4ff; }
+
+/* --- 按钮 --- */
+.b {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; padding: 0 18px; border-radius: 11px;
+  border: 1px solid var(--line2); background: var(--card2); color: var(--fg);
+  font-size: 14px; font-weight: 550; cursor: pointer;
+  transition: transform .08s, filter .15s;
+}
+.b:active { transform: scale(.97); }
+.b.blue { background: var(--blu); border-color: var(--blu); color: #fff; }
+.b.gold { background: var(--gold); border-color: var(--gold); color: #241a05; }
+.b.ghost { background: transparent; }
+.b.sm { min-height: 34px; padding: 0 12px; font-size: 12.5px; border-radius: 9px; }
+.b.block { display: flex; width: 100%; }
+
+/* ========== 5. 页面专用 ========== */
+
+/* --- 首页 --- */
+.hero {
+  position: relative; overflow: hidden;
+  padding: 22px 14px 18px; margin-bottom: 13px;
+  text-align: center; border: 1px solid var(--line); border-radius: var(--r);
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(217,164,65,.11), transparent 62%),
+    linear-gradient(180deg, rgba(79,140,255,.05), transparent 60%);
+}
+.hero .h1 {
+  font-size: 22px; font-weight: 800; letter-spacing: 1.5px;
+  background: linear-gradient(180deg, #fff6e0, var(--gold) 78%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero .h2 { margin-top: 5px; font-size: 11.5px; letter-spacing: 2.5px; color: var(--muted); }
+.hero .h3 { margin-top: 9px; font-size: 11px; color: var(--sub); }
+
+.entries { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.entry {
+  position: relative; overflow: hidden; cursor: pointer;
+  padding: 15px 13px 13px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  transition: transform .1s, border-color .15s;
+}
+.entry:active { transform: scale(.975); border-color: var(--line2); }
+.entry .ei { font-size: 25px; line-height: 1; }
+.entry .en { margin-top: 8px; font-size: 14.5px; font-weight: 650; }
+.entry .ed { margin-top: 3px; font-size: 11px; line-height: 1.45; color: var(--sub); }
+.entry .ecnt {
+  position: absolute; right: 11px; top: 11px;
+  padding: 2px 6px; border-radius: 6px;
+  font-size: 10px; font-family: var(--mono); color: var(--gold);
+  background: var(--gold-dim); border: 1px solid rgba(217,164,65,.28);
+}
+
+/* --- 怪物详情头部 --- */
+.mhero {
+  position: relative; overflow: hidden;
+  padding: 17px 15px 15px; margin-bottom: 12px;
+  border: 1px solid var(--line2); border-radius: var(--r);
+  background:
+    radial-gradient(ellipse 90% 120% at 100% 0%, rgba(166,121,255,.13), transparent 58%),
+    radial-gradient(ellipse 80% 110% at 0% 100%, rgba(79,140,255,.10), transparent 60%),
+    var(--card);
+}
+.mhero.boss {
+  border-color: rgba(217,164,65,.42);
+  background:
+    radial-gradient(ellipse 90% 120% at 100% 0%, rgba(217,164,65,.17), transparent 58%),
+    radial-gradient(ellipse 80% 110% at 0% 100%, rgba(240,162,60,.09), transparent 60%),
+    var(--card);
+}
+.mhero .mtop { display: flex; align-items: center; gap: 12px; }
+.mhero .mico {
+  flex: 0 0 52px; width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center; font-size: 27px;
+  background: var(--bg2); border: 1px solid var(--line2); border-radius: 14px;
+}
+.mhero.boss .mico { border-color: rgba(217,164,65,.5); background: rgba(217,164,65,.09); }
+.mhero .mname { font-size: 19px; font-weight: 750; letter-spacing: .3px; }
+.mhero .mlv { margin-top: 3px; font-size: 12px; font-family: var(--mono); color: var(--muted); }
+.mhero .mchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+/* --- 掉落分组 --- */
+.dgrp { margin-bottom: 4px; }
+.dgrp .dh { display: flex; align-items: center; gap: 7px; padding: 10px var(--pad) 7px; font-size: 12px; }
+.dgrp .dh .dt { font-weight: 650; }
+.dgrp .dh .dp {
+  padding: 1.5px 7px; border-radius: 5px;
+  font-size: 11px; font-family: var(--mono); color: var(--gold);
+  background: var(--gold-dim); border: 1px solid rgba(217,164,65,.22);
+}
+.ditem {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px var(--pad); font-size: 13px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.ditem:last-child { border-bottom: none; }
+.ditem:active { background: var(--card2); }
+.ditem .di {
+  flex: 0 0 26px; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 7px;
+}
+.ditem .dn { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ditem .dl { margin-left: 4px; font-size: 10.5px; font-family: var(--mono); color: var(--sub); }
+.ditem .dbar {
+  flex: 0 0 40px; height: 3px; margin-left: 2px;
+  border-radius: 2px; background: var(--line2); overflow: hidden;
+}
+.ditem .dbar i {
+  display: block; height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--blu2), var(--blu));
+}
+.ditem .dpc {
+  flex: 0 0 auto; min-width: 56px; text-align: right;
+  font-size: 11.5px; font-family: var(--mono); color: var(--muted);
+}
+.ditem .dpc.hi { color: var(--grn); font-weight: 600; }
+.ditem .dpc.lo { color: var(--sub); }
+
+/* --- 物品图标（游戏原图 / emoji 回退） --- */
+.iicon {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto; line-height: 1;
+}
+.iicon img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+  /* J2ME 像素图放大保持清晰，不要平滑 */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+.iicon.emoji { font-size: 16px; opacity: .9; }
+
+/* 尺寸 */
+.iicon.sm { width: 18px; height: 18px; }
+.iicon.sm.emoji { font-size: 12px; }
+.iicon.md { width: 24px; height: 24px; }
+.iicon.lg { width: 34px; height: 34px; }
+.iicon.xl { width: 44px; height: 44px; }
+
+/* 带底板 */
+.iicon.boxed {
+  border: 1px solid var(--line); border-radius: 7px;
+  background: var(--bg2); padding: 3px;
+}
+.iicon.boxed.lg { border-radius: 10px; padding: 5px; }
+
+/* 掉落行里的图标位 */
+.ditem .di { padding: 2px; }
+.ditem .di .iicon { width: 20px; height: 20px; }
+
+/* 列表行图标位 */
+.row .ri { padding: 3px; }
+.row .ri .iicon { width: 26px; height: 26px; }
+
+/* --- 物品品质色 --- */
+.q0 { color: #c9d2e6; }
+.q1 { color: #f0c060; }
+.q2 { color: #ff7fb0; }
+.q3 { color: #5be08b; }
+
+/* ========== 6. 工具类 ========== */
+.mt8 { margin-top: 8px; }
+.mt12 { margin-top: 12px; }
+.mt16 { margin-top: 16px; }
+.mb0 { margin-bottom: 0; }
+.tc { text-align: center; }
+.mono { font-family: var(--mono); }
+.dim { color: var(--muted); }
+.sub { color: var(--sub); }
+.gold { color: var(--gold2); }
+.grn { color: var(--grn); }
+.rowflex { display: flex; align-items: center; gap: 8px; }
+.wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+.hidden { display: none !important; }
+
+/* ========== 浅色主题（预留） ========== */
+html[data-theme="light"] {
+  --bg:    #f5f6f9;
+  --bg2:   #eceef4;
+  --card:  #ffffff;
+  --card2: #f2f4f8;
+  --line:  #e2e5ec;
+  --line2: #cfd4de;
+  --fg:    #1a1e28;
+  --muted: #5f6880;
+  --sub:   #8d96aa;
+  --gold:  #b8860b;
+  --gold2: #96690a;
+  --gold-dim: rgba(184,134,11,.12);
+}
+html[data-theme="light"] .hdr { background: rgba(245,246,249,.94); }
+html[data-theme="light"] .nav { background: rgba(255,255,255,.95); }
+/* --- 怪物精灵（游戏原图 / emoji 回退） --- */
+.msprite {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto; line-height: 1;
+}
+.msprite img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+.msprite.emoji { font-size: 22px; opacity: .9; }
+
+/* 尺寸：怪物原图 16~36px，用 2x 显示更清晰 */
+.msprite.sm { width: 22px; height: 22px; }
+.msprite.md { width: 32px; height: 32px; }
+.msprite.lg { width: 48px; height: 48px; }
+.msprite.xl { width: 64px; height: 64px; }
+
+/* 列表行里的怪物图标位 */
+.row .ri .msprite { width: 30px; height: 30px; }
+
+/* 详情页大图 */
+.mhero .mico .msprite { width: 46px; height: 46px; }
+.mhero .mico { padding: 2px; }

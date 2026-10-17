@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0c10">
+<meta name="description" content="英雄史诗初章 · 非官方逆向数据资料库：怪物、物品、地图、掉落概率、伤害计算">
+<title>英雄史诗初章 · 数据资料库（非官方）</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶栏 -->
+<header class="hdr">
+  <div class="ttl">
+    <span class="em" id="hdrEm">⚔️</span>
+    <span id="hdrTitle">英雄史诗初章</span>
+    <span class="ver" id="hdrVer">2.0</span>
+  </div>
+  <div class="sub" id="hdrSub">资料库 · 存档编辑 · 工具</div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<!-- 视图容器 -->
+<main id="view"></main>
+
+<!-- 底部导航 -->
+<nav class="nav" id="nav"></nav>
+
+<!-- ============ 内核 ============ -->
+<script src="js/core/router.js"></script>
+<script src="js/core/loader.js"></script>
+<script src="js/core/ui.js"></script>
+<script src="js/core/app.js"></script>
+
+<!-- ============ 配置（页面注册） ============ -->
+<script src="js/config.js"></script>
+
+<!-- ============ 页面 ============ -->
+<script src="js/pages/monster.js"></script>
+<script src="js/pages/map.js"></script>
+<script src="js/pages/calc.js"></script>
+
+<!-- ============ 启动 ============ -->
+<script>
+(function () {
+  // 版本号显示
+  const ver = document.getElementById('hdrVer');
+  if (ver && window.SITE) ver.textContent = 'v' + SITE.version;
+
+  App.init();
+})();
+</script>
+</body>
+</html>
