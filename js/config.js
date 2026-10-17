@@ -43,6 +43,19 @@
   });
 
   Router.registerPage({
+    id: 'item', group: 'wiki', title: '物品', order: 15,
+    load: ['items', 'icons', 'monsters'],
+    countData: 'items',
+    homeEntry: { icon: '📦', name: '物品图鉴', desc: '属性 · 售价 · 掉落来源' },
+    render: ctx => Pages.renderItemList(ctx),
+  });
+  Router.registerPage({
+    id: 'item-detail', group: 'wiki', title: '物品详情', order: 15,
+    hidden: true, parent: 'item',
+    load: ['items', 'icons', 'monsters'],
+    render: ctx => Pages.renderItemDetail(ctx),
+  });
+  Router.registerPage({
     id: 'map', group: 'wiki', title: '地图', order: 20,
     load: ['maps', 'monsters', 'items'],
     countData: 'maps',
