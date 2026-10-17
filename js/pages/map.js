@@ -50,9 +50,11 @@
 
   function mapRow(mp, icon) {
     const total = mp.mons.reduce((s, x) => s + (x.cnt || 0), 0);
+    // ★ BOSS 房：isBoss 由构建脚本按 m2/c* / m2/d0~d4 判定
+    const ico = mp.isBoss ? '👑' : (icon || '🗺️');
     return row({
-      icon: icon || '🗺️',
-      title: mp.name,
+      icon: ico,
+      title: mp.name + (mp.isBoss ? ' · BOSS房' : ''),
       desc: mp.id + ' · ' + mp.size + ' · ' + mp.mons.length + ' 种怪',
       right: String(total),
       onclick: () => Router.navigate('wiki', 'map-detail', [mp.id]),
@@ -78,16 +80,16 @@
     if (!mp) return empty('找不到地图「' + raw + '」', '❔');
 
     const total = mp.mons.reduce((s, x) => s + (x.cnt || 0), 0);
-
-    const head = h('div.mhero', [
+    const head = h('div.mhero' + (mp.isBoss ? '.boss' : ''), [
       h('div.mtop', [
-        h('div.mico', mp.id.startsWith('m2/') ? '🏛️' : '🗺️'),
+        h('div.mico', mp.isBoss ? '👑' : (mp.id.startsWith('m2/') ? '🏛️' : '🗺️')),
         h('div', { style: { flex: '1', minWidth: '0' } }, [
           h('div.mname', mp.name),
           h('div.mlv', mp.id + ' · ' + mp.size),
         ]),
       ]),
       h('div.mchips', [
+        mp.isBoss ? chip('BOSS 房', 'gold') : null,
         chip(mp.mons.length + ' 种怪'),
         chip('共 ' + total + ' 只', 'blu'),
       ]),

@@ -56,6 +56,27 @@
     render: ctx => Pages.renderItemDetail(ctx),
   });
   Router.registerPage({
+    id: 'set', group: 'wiki', title: '套装', order: 17,
+    load: ['items', 'icons'],
+    countData: null,
+    homeEntry: { icon: '👑', name: '套装图鉴', desc: '6 套 32 件 · 效果对照' },
+    render: ctx => Pages.renderSetList(ctx),
+  });
+  Router.registerPage({
+    id: 'quest', group: 'wiki', title: '任务', order: 18,
+    load: ['quests'],
+    countData: 'quests',
+    homeEntry: { icon: '📜', name: '任务攻略', desc: '主线 35 · 支线 28 · 进度算法' },
+    render: ctx => Pages.renderQuestList(ctx),
+  });
+  Router.registerPage({
+    id: 'skill', group: 'wiki', title: '技能', order: 19,
+    load: ['skills'],
+    countData: 'skills',
+    homeEntry: { icon: '⚔️', name: '技能图鉴', desc: '6 职业 · 通用主动 · 20 被动' },
+    render: ctx => Pages.renderSkillList(ctx),
+  });
+  Router.registerPage({
     id: 'map', group: 'wiki', title: '地图', order: 20,
     load: ['maps', 'monsters', 'items'],
     countData: 'maps',
@@ -73,7 +94,7 @@
   /* ---------- 工具页 ---------- */
   Router.registerPage({
     id: 'calc', group: 'tool', title: '伤害计算', order: 10,
-    load: ['monsters'],
+    load: ['monsters', 'skills'],
     homeEntry: { icon: '⚔️', name: '伤害计算', desc: '几刀杀死 · 拿多少' },
     render: ctx => Pages.renderDamageCalc(ctx),
   });

@@ -212,7 +212,7 @@
    */
   function monSprite(monId, fallback, opts) {
     opts = opts || {};
-    const url = Data && Data.spriteUrl ? Data.spriteUrl(monId, 0) : null;
+    const url = Data && Data.spriteUrl ? Data.spriteUrl(monId) : null;
     const cls = '.msprite' + (opts.size ? '.' + opts.size : '');
     if (url) {
       return h('span' + cls, h('img', {

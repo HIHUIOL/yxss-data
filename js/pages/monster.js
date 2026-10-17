@@ -9,8 +9,8 @@
   'use strict';
   const { h, card, row, search, seg, chip, empty, stat, fmt } = UI;
 
-  const DIFFS = ['普通', '困难', '地狱'];
-  const state = { diff: '地狱', sort: 'lv', q: '' };
+  const DIFFS = ['普通', '专家', '地狱'];
+  const state = { diff: '地狱', sort: 'lv', q: '', dirIdx: 0 };
 
   /* ================= 列表 ================= */
   function renderMonsterList(ctx) {
@@ -86,9 +86,12 @@
   function monRow(m) {
     const d = m.diff[state.diff];
     const lvText = d ? ('Lv' + d.lv[0] + '~' + d.lv[1]) : ('Lv' + m.baseLv);
+    // ★ 多部位 BOSS：名字后面标「部位 N/M」
+    const partTag = (m.partCount && m.partCount > 1)
+      ? (' · 部位' + m.partIndex + '/' + m.partCount) : '';
     return row({
       icon: UI.monSprite(m.id, m.boss ? '👑' : '👹', { size: 'sm' }),
-      title: m.name,
+      title: m.name + partTag,
       desc: lvText + ' · 攻' + (d ? d.atk : m.base.atk) + ' 防' + (d ? d.def : m.base.def) + ' · ' + m.maps.length + ' 张图',
       right: m.boss ? 'BOSS' : null,
       onclick: () => ctx_goDetail(m.id),
@@ -109,6 +112,7 @@
 
     const box = h('div');
     const bodyBox = h('div');
+    const siblingsBox = h('div');   // ★ 多部位 BOSS 的同场其它部位
 
     /* --- 头部 --- */
     const d0 = m.diff[state.diff] || m.diff[Object.keys(m.diff)[0]];
@@ -125,12 +129,30 @@
         ]),
         h('div.mchips', [
           m.boss ? chip('BOSS', 'gold') : null,
+          (m.partCount && m.partCount > 1) ? chip('部位 ' + m.partIndex + '/' + m.partCount) : null,
           d ? chip('攻 ' + d.atk, 'blu') : null,
           d ? chip('防 ' + d.def, 'blu') : null,
           d ? chip('HP ' + d.hp, 'blu') : null,
           d ? chip('命中 ' + d.hit) : null,
         ]),
       ]));
+
+      // ★ 多部位 BOSS：显示同场的其它部位，可点击跳转
+      if (m.partCount && m.partCount > 1 && m.bossGroup) {
+        const all = Object.keys(Data.get('monsters') || {})
+          .map(k => Data.get('monsters')[k])
+          .filter(x => x.bossGroup === m.bossGroup && x.id !== m.id)
+          .sort((a, b) => a.partIndex - b.partIndex);
+        if (all.length) {
+          UI.mount(siblingsBox, card('👑 同场 BOSS 的其它部位', all.map(x => row({
+            icon: UI.monSprite(x.id, '👑', { size: 'sm' }),
+            title: x.name + ' · 部位' + x.partIndex + '/' + x.partCount,
+            desc: '攻' + (x.diff[state.diff] ? x.diff[state.diff].atk : x.base.atk) +
+                  ' 防' + (x.diff[state.diff] ? x.diff[state.diff].def : x.base.def),
+            onclick: () => Router.navigate('wiki', 'monster-detail', [String(x.id)]),
+          })), { flush: true, aside: all.length + ' 个' }));
+        }
+      }
     };
 
     /* --- 难度切换 --- */
@@ -193,6 +215,7 @@
     box.appendChild(heroBox);
     box.appendChild(segBox);
     box.appendChild(bodyBox);
+    box.appendChild(siblingsBox);   // ★ 同场 BOSS 的其它部位
     return box;
   }
 

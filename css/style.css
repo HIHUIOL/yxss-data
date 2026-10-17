@@ -484,6 +484,25 @@ html[data-theme="light"] .nav { background: rgba(255,255,255,.95); }
   image-rendering: crisp-edges;
 }
 .msprite.emoji { font-size: 22px; opacity: .9; }
+/* ★ 多图层叠加：各层绝对定位，底边对齐、水平居中 */
+.msprite.stack { position: relative; }
+.msprite.stack img {
+  position: absolute; left: 50%; bottom: 0;
+  transform: translateX(-50%);
+  width: auto; height: 100%;
+  max-width: none;
+}
+
+/* ★ 方向切换（仅 4 方向怪 k=0 使用） */
+.dirpick { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.dirpick .dirbtn {
+  font-size: 10.5px; padding: 3px 7px; border-radius: 6px; cursor: pointer;
+  background: var(--bg2); border: 1px solid var(--line2); color: var(--muted);
+  -webkit-tap-highlight-color: transparent;
+}
+.dirpick .dirbtn.on {
+  background: var(--card2); border-color: var(--gold); color: var(--gold2); font-weight: 600;
+}
 
 /* 尺寸：怪物原图 16~36px，用 2x 显示更清晰 */
 .msprite.sm { width: 22px; height: 22px; }

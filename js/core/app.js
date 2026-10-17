@@ -17,6 +17,7 @@
     page: null,
     params: [],
     scrollMemo: new Map(),   // key -> scrollY
+    curHash: null,           // ★ 当前页面自己的 hash（离开时用它存滚动位置）
     current: null,           // 当前页面 def
     renderToken: 0,          // 防止异步渲染串台
   };
@@ -87,9 +88,11 @@
 
   /* ---------- 路由处理 ---------- */
   async function handleRoute(route) {
-    // 保存离开页面的滚动位置
-    if (state.current !== null) {
-      state.scrollMemo.set(location.hash, window.scrollY);
+    // ★ 保存「离开的那个页面」的滚动位置
+    //   注意：这里不能读 location.hash —— 路由回调触发时它已经是新页面的了。
+    //   所以用 state.curHash 记录当前页面自己的 hash。
+    if (state.current !== null && state.curHash) {
+      state.scrollMemo.set(state.curHash, window.scrollY);
     }
 
     // 首页：没指定 group
@@ -175,12 +178,18 @@
       if (token !== state.renderToken) return;
 
       if (out !== undefined && out !== null) mount(els.view, out);
-
       if (page.mount) page.mount(els.view, ctx);
 
-      // 恢复滚动位置
-      const memo = state.scrollMemo.get(location.hash);
-      window.scrollTo(0, memo || 0);
+      // ★ 记录本页自己的 hash，恢复本页上次的滚动位置
+      //   用 curHash 而非 location.hash：navigate(replace) 时 location 可能还没更新
+      state.curHash = Router.buildHash(state.group, state.page, state.params) || location.hash;
+      const memo = state.scrollMemo.get(state.curHash);
+      // 内容渲染完后浏览器可能还在重排，延迟一帧再滚
+      if (memo) {
+        requestAnimationFrame(() => window.scrollTo(0, memo));
+      } else {
+        window.scrollTo(0, 0);
+      }
     } catch (err) {
       if (token !== state.renderToken) return;
       console.error('[app] 页面渲染失败', page.id, err);

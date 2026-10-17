@@ -1,5 +1,5 @@
 {
- "version": "1e50b3ae",
+ "version": "ee4573ef",
  "datasets": {
   "items": {
    "file": "items.json",
@@ -9,12 +9,12 @@
   "monsters": {
    "file": "monsters.json",
    "count": 132,
-   "size": 676808
+   "size": 680125
   },
   "maps": {
    "file": "maps.json",
    "count": 72,
-   "size": 7600
+   "size": 8666
   },
   "icons": {
    "file": "icons.json",
@@ -24,7 +24,17 @@
   "sprites": {
    "file": "sprites.json",
    "count": 132,
-   "size": 308162
+   "size": 32673
+  },
+  "quests": {
+   "file": "quests.json",
+   "count": 63,
+   "size": 10078
+  },
+  "skills": {
+   "file": "skills.json",
+   "count": 58,
+   "size": 29536
   }
  }
 }

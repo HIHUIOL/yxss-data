@@ -207,6 +207,28 @@ function qNameNode(it, tag) {
       box.appendChild(card('📝 说明', h('div', { style: { padding: '8px 4px', lineHeight: '1.7' } }, it.desc)));
     }
 
+    /* 所属套装 */
+    if (it.tier !== null && it.tier !== undefined && Pages.SETS) {
+      const k = String(it.tier);
+      const set = Pages.SETS.find(s => ('0' + s.tier).slice(-2) === k);
+      if (set) {
+        const members = Pages.setMembersOf ? Pages.setMembersOf(it.tier) : [];
+        box.appendChild(card('👑 所属套装：' + set.name, [
+          h('div', { style: { padding: '8px 4px 4px', fontSize: '12.5px', lineHeight: '1.8' } }, [
+            h('div', '效果：' + set.effect),
+            set.extra ? h('div', { style: { fontSize: '11.5px', color: 'var(--sub)', marginTop: '3px' } }, set.extra) : null,
+            h('div', { style: { fontSize: '11.5px', color: 'var(--sub)', marginTop: '3px' } },
+              '同套装共 ' + members.length + ' 件，穿满 3 件触发'),
+          ]),
+          h('div', { style: { padding: '0 4px 8px' } },
+            h('div.dirpick', members.filter(x => x.id !== it.id).map(x =>
+              h('span.dirbtn', {
+                onclick: () => Router.navigate('wiki', 'item-detail', [x.id]),
+              }, x.name)))),
+        ], { flush: true }));
+      }
+    }
+
     /* 掉落来源（反查怪物） */
     const monBox = h('div');
     const srcList = [];

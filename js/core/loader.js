@@ -213,7 +213,6 @@
     }
     return null;
   }
-
   /** 拼 img 的 key："{k}:{id:02d}" */
   function spriteKey(k, sid) {
     return k + ':' + (sid < 10 ? '0' + sid : String(sid));
