@@ -225,6 +225,26 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; colo
 }
 .seg .s.on .sl { color: var(--gold); }
 
+/* --- 横向滚动的分类条（物品页类别筛选）--- */
+.seg-scroll {
+  overflow-x: auto; overflow-y: hidden;
+  margin-bottom: 12px;
+  /* 左右留出一点呼吸，滚动时不会被贴死 */
+  padding: 1px 0 3px;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  /* 右侧渐隐，暗示「还能往右滑」 */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+}
+.seg-scroll::-webkit-scrollbar { display: none; }
+/* 里面的 .seg 不再均分，改成按内容宽度排 */
+.seg-scroll .seg { display: inline-flex; margin-bottom: 0; padding-right: 28px; }
+.seg-scroll .seg .s {
+  flex: 0 0 auto; min-width: 58px; padding: 8px 12px;
+  white-space: nowrap;
+}
+.seg-scroll .seg .s .sl { white-space: nowrap; }
+
 /* --- 状态占位 --- */
 .empty {
   padding: 34px 20px; text-align: center;
