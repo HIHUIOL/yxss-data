@@ -11,6 +11,37 @@
 
   const state = { cat: '全部', sort: 'cat', q: '' };
 
+/* ============================================================
+ * ★ 品质颜色 —— 取自游戏字节码
+ *
+ * 证据：class原始/g.class
+ *   214: getstatic  q.c:[I        ← 颜色表
+ *   221: getfield   bx.e:B        ← 装备品质字段
+ *   224: iaload                   ← q.c[bx.e]
+ *   225: invokevirtual dd.a(I)V   ← 设为绘制颜色
+ *
+ * 源码/q.java:11
+ *   public static final int[] c = new int[]{0xFFFFFF, 0xFFFF00, 16722152, 65280};
+ *
+ * 0xFFFFFF = 白 / 0xFFFF00 = 黄 / 16722152 = 0xFF2A68 粉 / 65280 = 0x00FF00 绿
+ * ============================================================ */
+const QUALITY_COLORS = ['#FFFFFF', '#FFFF00', '#FF2A68', '#00FF00'];
+const QUALITY_NAMES = ['普通', '优良', '稀有', '传说'];
+
+function qColor(it) {
+  const q = (it && typeof it.quality === 'number') ? it.quality : 0;
+  return QUALITY_COLORS[q] || QUALITY_COLORS[0];
+}
+function qName(it) {
+  const q = (it && typeof it.quality === 'number') ? it.quality : 0;
+  return QUALITY_NAMES[q] || QUALITY_NAMES[0];
+}
+/** 带品质颜色的名字节点 */
+function qNameNode(it, tag) {
+  const el = h(tag || 'span', { style: { color: qColor(it) } }, it.name);
+  return el;
+}
+
   /* 装备类（有攻/防） */
   const EQUIP_CATS = new Set([
     '斧头', '双手剑', '刀剑', '短剑', '枪', '枪剑', '钝器',
@@ -123,7 +154,8 @@
     if (!parts.length) parts.push('数量类');
     return row({
       icon: UI.itemIcon(it.id, it.icon, { size: 'sm' }),
-      title: it.name,
+      // ★ 名字按品质着色（同游戏内表现）
+      title: qNameNode(it),
       desc: '#' + it.id + ' · ' + parts.join(' · '),
       right: it.price ? it.price + 'G' : null,
       onclick: () => Router.navigate('wiki', 'item-detail', [it.id]),
@@ -144,13 +176,13 @@
       h('div.mtop', [
         h('div.mico', UI.itemIcon(it.id, it.icon, { size: 'lg' })),
         h('div', { style: { flex: '1', minWidth: '0' } }, [
-          h('div.mname', it.name),
+          h('div.mname', { style: { color: qColor(it) } }, it.name),
           h('div.mlv', '编号 #' + it.id + ' · ' + it.catName + ' · ' + (it.equip ? '可装备' : '非装备')),
         ]),
       ]),
       h('div.mchips', [
         chip('Lv' + it.level, 'gold'),
-        it.quality ? chip('品质 ' + it.quality) : null,
+        chip(qName(it), 'q' + (it.quality || 0)),
         it.dmg ? chip('攻 ' + it.dmg[0] + '~' + it.dmg[1], 'blu') : null,
         it.defense ? chip('防 ' + it.defense, 'blu') : null,
         it.crit ? chip('暴击 ' + it.crit + '%') : null,
@@ -208,6 +240,11 @@
 
   Pages.renderItemList = renderItemList;
   Pages.renderItemDetail = renderItemDetail;
+  // ★ 品质颜色工具，供其他页面（怪物掉落行等）复用
+  Pages.qColor = qColor;
+  Pages.qName = qName;
+  Pages.QUALITY_COLORS = QUALITY_COLORS;
+  Pages.QUALITY_NAMES = QUALITY_NAMES;
   Pages.meta = Pages.meta || {};
   Pages.meta['item'] = { needs: ['items', 'icons', 'monsters', 'sprites'] };
   Pages.meta['item-detail'] = { needs: ['items', 'icons', 'monsters', 'sprites'] };

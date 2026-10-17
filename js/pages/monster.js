@@ -243,7 +243,8 @@
     }, [
       h('div.di', UI.itemIcon(itemId, fallback, { size: 'sm' })),
       h('div.dn', [
-        name,
+        // ★ 物品名按品质着色（颜色表见 item.js 顶部注释）
+        h('span', { style: { color: Pages.qColor ? Pages.qColor(e) : null } }, name),
         it[5] ? h('span.dl', 'Lv' + it[5]) : null,
       ]),
       h('div.dbar', h('i', { style: { width: w + '%' } })),

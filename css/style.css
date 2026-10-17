@@ -225,6 +225,12 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; colo
 }
 .seg .s.on .sl { color: var(--gold); }
 
+/* 品质颜色（与游戏内一致，见 js/pages/item.js 注释）
+ * 0 白 / 1 黄 / 2 粉 / 3 绿 */
+.chip.q1 { color: #FFFF00; border-color: #FFFF0055; background: #FFFF0012; }
+.chip.q2 { color: #FF2A68; border-color: #FF2A6855; background: #FF2A6812; }
+.chip.q3 { color: #00FF00; border-color: #00FF0055; background: #00FF0012; }
+
 /* --- 横向滚动的分类条（物品页类别筛选）--- */
 .seg-scroll {
   overflow-x: auto; overflow-y: hidden;
